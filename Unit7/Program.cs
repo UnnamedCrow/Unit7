@@ -9,7 +9,19 @@ namespace Unit7
 {
     public static class Helper
     {
+        private static int article;
+        public static int Article
+        {
+            get { return article++; }
+        }
+        public static void Buy()
+        {
 
+        }
+        static Helper()
+        {
+            article = 0;
+        }
     }
     abstract class Person
     {
@@ -136,14 +148,14 @@ namespace Unit7
             }
         }
         // Prise of products can't bee cheper than 0.01
-        private double prise;
-        public double Prise
+        private double price;
+        public double Price
         {
-            get { return prise; }
+            get { return price; }
             set
             {
                 if (value > 0)
-                    prise = value;
+                    price = value;
                 else
                     Console.WriteLine("Ooops! Prise can't be cheaper than 0.01");
             }
@@ -223,14 +235,48 @@ namespace Unit7
             }
         }
     }
-    class Order<TDelivery,
-    TStruct> where TDelivery : Delivery
+    class Order<TDelivery> where TDelivery : Delivery
     {
         public TDelivery Delivery;
 
         public int Number;
 
         public string Description;
+
+        public Manager Manager;
+
+        public User User;
+
+        public bool Payment;
+
+        public Product[] Products;
+
+        public Product this[int index]
+        {
+            get
+            {
+                if (index > 0 && index < Products.Length)
+                    return Products[index];
+                else
+                    return null;
+            }
+        }
+        public Order(TDelivery delivery, int number, Manager manager, User user, Product[] products)
+        {
+            Delivery= delivery;
+            Number = number;
+            Description = Console.ReadLine();
+            Manager = manager;
+            User = user;
+            Payment = false;
+            Products = products;
+            Price = 0;
+            foreach (var item in Products)
+            {
+                Price += item.Price;
+            }
+        }
+        public double Price;
 
         public void DisplayAddress()
         {
@@ -243,7 +289,7 @@ namespace Unit7
     {
         static void Main(string[] args)
         {
-         
+
             Console.ReadLine();
 
         }
