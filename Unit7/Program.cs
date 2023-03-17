@@ -7,20 +7,23 @@ using System.Threading.Tasks;
 
 namespace Unit7
 {
-    public static class Helper
+    public static class Helper<TDelivery> where TDelivery : Delivery
     {
         private static int article;
         public static int Article
         {
             get { return article++; }
         }
-        public static void Buy()
+        private static int number;
+        public static int Number
         {
-
+            get { return number++; }
         }
+ 
         static Helper()
         {
             article = 0;
+            number = 0;
         }
     }
     abstract class Person
@@ -101,9 +104,10 @@ namespace Unit7
         }
     }
 
-    abstract class Delivery
+    abstract public class Delivery
     {
         public string Address;
+        public double Cost;
     }
 
     class HomeDelivery : Delivery
@@ -178,9 +182,10 @@ namespace Unit7
     // Shop with managers, users and products
     class Shop
     {
-        // Manaders array
+        public string Name;
+        // Managers array
         private Manager[] managers;
-        public Manager this[int index]
+        public Manager this[short index]
         {
             get
             {
@@ -224,7 +229,7 @@ namespace Unit7
         }
         // Array of products
         private Product[] products;
-        public Product this[short index]
+        public Product this[int index]
         {
             get
             {
@@ -234,6 +239,22 @@ namespace Unit7
                     return null;
             }
         }
+        public Shop()
+        {
+            Name = null;
+            managers = null;
+            users = null;
+            products = null;
+        }
+        public Shop(string name, User[] users, Product[] products) : this() 
+        {
+            Console.WriteLine("Enter count of managers");
+            int i = int.Parse(Console.ReadLine());
+            Manager[] managers= new Manager[i];
+            this.users = users;
+            this.products = products;
+        }
+
     }
     class Order<TDelivery> where TDelivery : Delivery
     {
@@ -263,20 +284,20 @@ namespace Unit7
         }
         public Order(TDelivery delivery, int number, Manager manager, User user, Product[] products)
         {
-            Delivery= delivery;
+            Delivery = delivery;
             Number = number;
             Description = Console.ReadLine();
             Manager = manager;
             User = user;
             Payment = false;
             Products = products;
-            Price = 0;
             foreach (var item in Products)
             {
                 Price += item.Price;
             }
+            Price += delivery.Cost;
         }
-        public double Price;
+        public double Price = 0;
 
         public void DisplayAddress()
         {
