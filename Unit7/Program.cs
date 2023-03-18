@@ -19,10 +19,8 @@ namespace Unit7
         {
             get { return number++; }
         }
-       /// <summary>
-       /// Function for deleting one item, which equals NULL
-       /// </summary>
-       /// <param name="OldArray"></param>
+
+       /// Deleting one item, which equals NULL
         public static void CutOneItem(ref TArray[] OldArray, string Type)
         {
             for(int i = 0; i < OldArray.Length - 1; i++)
@@ -32,6 +30,16 @@ namespace Unit7
             }
             Array.Resize(ref OldArray, OldArray.Length - 1);
             Console.WriteLine("Deleted one item {0}", Type);
+        }
+        /// Counting sum of users products list
+        public static double ListPrice(Product[] List)
+        {
+            double Price = 0;
+            for (int i = 0; i < List.Length; i++)
+            {
+                Price += List[i].Price * List[i].Count;
+            }
+            return Price;
         }
         static Helper()
         {
@@ -193,24 +201,26 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Manager ID mast be bigger than 1000");
         }
-        public double CheckUsersBalance(User User)
+
+        public bool CheckUsersBalance(User User)
         {
-            double sum = 0;
             if (User.productsList != null)
             {
-                for(int i = 0; i < User.productsList.Length; i ++)
+                if (User.Balance >= Helper<Product>.ListPrice(User.productsList))
                 {
-                    if (User.productsList[i] != null)
-                    {
-                        sum += User.productsList[i].Price * User.productsList[i].Count;
-                    }
+                    Console.WriteLine("User can buy this");
+                    return true;
                 }
-                return sum;
+                else
+                {
+                    Console.WriteLine("User can't buy this");
+                    return false;
+                }
             }
             else
             {
                 Console.WriteLine("Oops! Users product list is empty!");
-                return 0;
+                return false;
             }
         }
     }
