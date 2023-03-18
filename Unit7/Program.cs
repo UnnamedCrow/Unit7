@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Unit7
 {
-    public static class Helper<TDelivery> where TDelivery : Delivery
+    public static class Helper<TArray> where TArray : Product
     {
         private static int article;
         public static int Article
@@ -19,7 +19,15 @@ namespace Unit7
         {
             get { return number++; }
         }
- 
+        public static void CutOneItem(ref TArray[] OldArray)
+        {
+            for(int i = 0; i < OldArray.Length - 1; i++)
+            {
+                if (OldArray[i].Count == 0)
+                    OldArray[i] = OldArray[i + 1];
+            }
+            Array.Resize(ref OldArray, OldArray.Length - 1);
+        }
         static Helper()
         {
             article = 0;
@@ -64,16 +72,16 @@ namespace Unit7
         private Product[] productsList;
         public Product this[int index]
         {
-            get 
-            { 
-                if(index >=0 && index < productsList.Length)
+            get
+            {
+                if (index >= 0 && index < productsList.Length)
                     return productsList[index];
                 else
                     return null;
             }
             set
             {
-                if(index >= 0 && index < productsList.Length)
+                if (index >= 0 && index < productsList.Length)
                     productsList[index] = value;
             }
         }
@@ -139,9 +147,18 @@ namespace Unit7
         }
         public void DeleteProduct(Product DelProd)
         {
-            if(productsList != null)
+            if (productsList != null)
             {
-
+                foreach (Product Prod in productsList)
+                {
+                    if (Prod.Name == DelProd.Name && Prod.Article == DelProd.Article)
+                    {
+                        Prod.Count -= DelProd.Count;
+                        if (Prod.Count == 0)
+                            Helper<Product>.CutOneItem(ref productsList);
+                        Console.WriteLine("Product deleted");
+                    }
+                }
             }
             else
                 Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
@@ -191,7 +208,7 @@ namespace Unit7
     {
         /* ... */
     }
-    class Product
+    public class Product
     {
         private string name;
         public string Name
@@ -242,7 +259,10 @@ namespace Unit7
                 if (value >= 0)
                     count = value;
                 else
+                {
                     Console.WriteLine("Ooops! Can't be negative amount of products");
+                    count = 0;
+                }
             }
         }
     }
@@ -313,11 +333,11 @@ namespace Unit7
             users = null;
             products = null;
         }
-        public Shop(string name, User[] users, Product[] products) : this() 
+        public Shop(string name, User[] users, Product[] products) : this()
         {
             Console.WriteLine("Enter count of managers");
             int i = int.Parse(Console.ReadLine());
-            Manager[] managers= new Manager[i];
+            Manager[] managers = new Manager[i];
             this.users = users;
             this.products = products;
         }
@@ -358,7 +378,7 @@ namespace Unit7
             }
             Price += delivery.Cost;
         }
-        
+
         public void DisplayAddress()
         {
             Console.WriteLine(Delivery.Address);
