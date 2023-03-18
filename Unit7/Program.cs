@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Unit7
 {
-    public static class Helper<TArray> where TArray : Product
+    public static class Helper<TArray>
     {
         private static int article;
         public static int Article
@@ -19,14 +19,19 @@ namespace Unit7
         {
             get { return number++; }
         }
-        public static void CutOneItem(ref TArray[] OldArray)
+       /// <summary>
+       /// Function for deleting one item, which equals NULL
+       /// </summary>
+       /// <param name="OldArray"></param>
+        public static void CutOneItem(ref TArray[] OldArray, string Type)
         {
             for(int i = 0; i < OldArray.Length - 1; i++)
             {
-                if (OldArray[i].Count == 0)
-                    OldArray[i] = OldArray[i + 1];
+                if (OldArray[i] == null)
+                    OldArray[i] = OldArray[i + 1]; 
             }
             Array.Resize(ref OldArray, OldArray.Length - 1);
+            Console.WriteLine("Deleted one item {0}", Type);
         }
         static Helper()
         {
@@ -69,7 +74,7 @@ namespace Unit7
     class User : Person
     {
         // Users products list
-        private Product[] productsList;
+        public Product[] productsList;
         public Product this[int index]
         {
             get
@@ -149,14 +154,16 @@ namespace Unit7
         {
             if (productsList != null)
             {
-                foreach (Product Prod in productsList)
+                for (int i = 0; i < productsList.Length; i ++)
                 {
-                    if (Prod.Name == DelProd.Name && Prod.Article == DelProd.Article)
+                    if (productsList[i].Name == DelProd.Name && productsList[i].Article == DelProd.Article)
                     {
-                        Prod.Count -= DelProd.Count;
-                        if (Prod.Count == 0)
-                            Helper<Product>.CutOneItem(ref productsList);
-                        Console.WriteLine("Product deleted");
+                        productsList[i].Count -= DelProd.Count;
+                        if (productsList[i].Count == 0)
+                        {
+                            productsList[i] = null;
+                            Helper<Product>.CutOneItem(ref productsList, "User");
+                        }  
                     }
                 }
             }
@@ -185,6 +192,26 @@ namespace Unit7
                 this.id = id;
             else
                 Console.WriteLine("Ooops! Manager ID mast be bigger than 1000");
+        }
+        public double CheckUsersBalance(User User)
+        {
+            double sum = 0;
+            if (User.productsList != null)
+            {
+                for(int i = 0; i < User.productsList.Length; i ++)
+                {
+                    if (User.productsList[i] != null)
+                    {
+                        sum += User.productsList[i].Price * User.productsList[i].Count;
+                    }
+                }
+                return sum;
+            }
+            else
+            {
+                Console.WriteLine("Oops! Users product list is empty!");
+                return 0;
+            }
         }
     }
 
