@@ -60,6 +60,24 @@ namespace Unit7
     }
     class User : Person
     {
+        // Users products list
+        private Product[] productsList;
+        public Product this[int index]
+        {
+            get 
+            { 
+                if(index >=0 && index < productsList.Length)
+                    return productsList[index];
+                else
+                    return null;
+            }
+            set
+            {
+                if(index >= 0 && index < productsList.Length)
+                    productsList[index] = value;
+            }
+        }
+        // users money balance
         private double balance;
         public double Balance
         {
@@ -78,6 +96,55 @@ namespace Unit7
                 balance = mon;
             else
                 Console.WriteLine("Ooops! User can't have negative balance");
+            productsList = new Product[1];
+            productsList[0] = null;
+        }
+        public void AddProduct(Product NewProduct)
+        {
+            if (productsList != null)
+            {
+                foreach (Product Prod in productsList)
+                {
+                    if (Prod.Name == NewProduct.Name && Prod.Article == NewProduct.Article)
+                    {
+                        Prod.Count += NewProduct.Count;
+                        break;
+                    }
+
+                }
+                Array.Resize(ref productsList, productsList.Length + 1);
+                productsList[productsList.Length - 1] = NewProduct;
+            }
+            else
+                Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
+        }
+        public void AddProduct(Product[] NewProducts)
+        {
+            if (productsList != null)
+            {
+                foreach (Product Prod in productsList)
+                    foreach (Product NewProd in NewProducts)
+                    {
+                        if (Prod.Name == NewProd.Name && Prod.Article == NewProd.Article)
+                        {
+                            Prod.Count += NewProd.Count;
+                            break;
+                        }
+                        Array.Resize(ref productsList, productsList.Length + 1);
+                        productsList[productsList.Length - 1] = NewProd;
+                    }
+            }
+            else
+                Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
+        }
+        public void DeleteProduct(Product DelProd)
+        {
+            if(productsList != null)
+            {
+
+            }
+            else
+                Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
         }
     }
     class Manager : Person
@@ -259,19 +326,13 @@ namespace Unit7
     class Order<TDelivery> where TDelivery : Delivery
     {
         public TDelivery Delivery;
-
         public int Number;
-
         public string Description;
-
         public Manager Manager;
-
         public User User;
-
         public bool Payment;
-
         public Product[] Products;
-
+        public double Price = 0;
         public Product this[int index]
         {
             get
@@ -297,8 +358,7 @@ namespace Unit7
             }
             Price += delivery.Cost;
         }
-        public double Price = 0;
-
+        
         public void DisplayAddress()
         {
             Console.WriteLine(Delivery.Address);
