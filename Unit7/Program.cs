@@ -20,13 +20,13 @@ namespace Unit7
             get { return number++; }
         }
 
-       /// Deleting one item, which equals NULL
+        /// Deleting one item, which equals NULL
         public static void CutOneItem(ref TArray[] OldArray, string Type)
         {
-            for(int i = 0; i < OldArray.Length - 1; i++)
+            for (int i = 0; i < OldArray.Length - 1; i++)
             {
                 if (OldArray[i] == null)
-                    OldArray[i] = OldArray[i + 1]; 
+                    OldArray[i] = OldArray[i + 1];
             }
             Array.Resize(ref OldArray, OldArray.Length - 1);
             Console.WriteLine("Deleted one item {0}", Type);
@@ -162,7 +162,7 @@ namespace Unit7
         {
             if (productsList != null)
             {
-                for (int i = 0; i < productsList.Length; i ++)
+                for (int i = 0; i < productsList.Length; i++)
                 {
                     if (productsList[i].Name == DelProd.Name && productsList[i].Article == DelProd.Article)
                     {
@@ -171,7 +171,7 @@ namespace Unit7
                         {
                             productsList[i] = null;
                             Helper<Product>.CutOneItem(ref productsList, "User");
-                        }  
+                        }
                     }
                 }
             }
@@ -378,7 +378,54 @@ namespace Unit7
             this.users = users;
             this.products = products;
         }
-
+        public void DelItem(User[] OldArray, string Login)
+        {
+            if (OldArray != null)
+            {
+                for (int i = 0; i < OldArray.Length; i++)
+                {
+                    if (OldArray[i].Login == Login)
+                    {
+                        Helper<User>.CutOneItem(ref OldArray, "User");
+                        return;
+                    }
+                }
+            }
+            else
+                Console.WriteLine("This Array can't be empty");
+        }
+        public void DelItem(Manager[] OldArray, string Login)
+        {
+            if (OldArray != null)
+            {
+                for (int i = 0; i < OldArray.Length; i++)
+                {
+                    if (OldArray[i].Login == Login)
+                    {
+                        Helper<Manager>.CutOneItem(ref OldArray, "Manager");
+                        return;
+                    }
+                }
+            }
+            else
+                Console.WriteLine("This Array can't be empty");
+        }
+        public void DelItem(Product[] OldArray, string Article)
+        {
+            if (OldArray != null)
+            {
+                for (int i = 0; i < OldArray.Length; i++)
+                {
+                    if (OldArray[i].Article == Article)
+                    {
+                        Helper<Product>.CutOneItem(ref OldArray, "Product");
+                        return;
+                    }
+                }
+            }
+            else
+                Console.WriteLine("This Array can't be empty");
+        }
     }
     class Order<TDelivery> where TDelivery : Delivery
     {
