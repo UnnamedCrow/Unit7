@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Unit7
 {
-    public static class Helper<TArray>
+    static class Helper<TArray>
     {
         private static int article;
         public static int Article
@@ -41,6 +41,28 @@ namespace Unit7
             }
             return Price;
         }
+        public static bool CheckUsersBalance(User User)
+        {
+            if (User.productsList != null)
+            {
+                if (User.Balance >= Helper<Product>.ListPrice(User.productsList))
+                {
+                    Console.WriteLine("User can buy this");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("User can't buy this");
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Oops! Users product list is empty!");
+                return false;
+            }
+        }
+
         static Helper()
         {
             article = 0;
@@ -111,6 +133,11 @@ namespace Unit7
                     Console.WriteLine("Ooops! You have not enough money to by");
             }
         }
+        private int delivery;
+        public int Delivery
+        {
+            get { return delivery; }
+        }
         public User(double mon) : base(Console.ReadLine(), Console.ReadLine())
         {
             if (mon >= 0)
@@ -119,6 +146,7 @@ namespace Unit7
                 Console.WriteLine("Ooops! User can't have negative balance");
             productsList = new Product[1];
             productsList[0] = null;
+            delivery =  0;
         }
         public void AddProduct(Product NewProduct)
         {
@@ -178,6 +206,17 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
         }
+        public void ChooseDelivery()
+        {
+            Console.WriteLine("Choose the delivery you want");
+            Console.WriteLine("1 - HomeDelivery, 2 - PickPointDelivery, 3 - ShopDelivery");
+            delivery = int.Parse(Console.ReadLine());
+            if (delivery != 1 && delivery != 2 && delivery != 3)
+            {
+                Console.WriteLine("Ooops! Wrong choise!");
+                ChooseDelivery();
+            }
+        }
     }
     class Manager : Person
     {
@@ -200,28 +239,6 @@ namespace Unit7
                 this.id = id;
             else
                 Console.WriteLine("Ooops! Manager ID mast be bigger than 1000");
-        }
-
-        public bool CheckUsersBalance(User User)
-        {
-            if (User.productsList != null)
-            {
-                if (User.Balance >= Helper<Product>.ListPrice(User.productsList))
-                {
-                    Console.WriteLine("User can buy this");
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("User can't buy this");
-                    return false;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Oops! Users product list is empty!");
-                return false;
-            }
         }
     }
 
@@ -307,6 +324,7 @@ namespace Unit7
     class Shop
     {
         public string Name;
+        public string Adress;
         // Managers array
         private Manager[] managers;
         public Manager this[short index]
@@ -366,12 +384,15 @@ namespace Unit7
         public Shop()
         {
             Name = null;
+            Adress= null;
             managers = null;
             users = null;
             products = null;
         }
-        public Shop(string name, User[] users, Product[] products) : this()
+        public Shop(string Name, string Adress, User[] users, Product[] products) : this()
         {
+            this.Name = Name;
+            this.Adress = Adress;
             Console.WriteLine("Enter count of managers");
             int i = int.Parse(Console.ReadLine());
             Manager[] managers = new Manager[i];
@@ -424,7 +445,12 @@ namespace Unit7
                 }
             }
             else
-                Console.WriteLine("This Array can't be empty");
+                Console.WriteLine("This Array can't be empty"); 
+        }
+        public bool CheckUser()
+        {
+            return true;
+            return false;
         }
     }
     class Order<TDelivery> where TDelivery : Delivery
@@ -447,7 +473,7 @@ namespace Unit7
                     return null;
             }
         }
-        public Order(TDelivery delivery, int number, Manager manager, User user, Product[] products)
+        public Order(TDelivery delivery, int number, Manager manager, User user)
         {
             Delivery = delivery;
             Number = number;
@@ -455,7 +481,7 @@ namespace Unit7
             Manager = manager;
             User = user;
             Payment = false;
-            Products = products;
+            Products = user.productsList;
             foreach (var item in Products)
             {
                 Price += item.Price;
