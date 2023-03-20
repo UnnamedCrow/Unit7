@@ -272,6 +272,21 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Manager ID mast be bigger than 1000");
         }
+        /// Operator == for class Manager
+        public static bool operator ==(Manager a, Manager b)
+        {
+            if (a.id == b.id)
+                return true;
+            else
+                return false;
+        }
+        /// Operator != for class Manager
+        public static bool operator !=(Manager a, Manager b)
+        {
+            if (a.id != b.id)
+                return true;
+            else return false;
+        }
     }
 
     abstract public class Delivery
@@ -350,6 +365,22 @@ namespace Unit7
                     count = 0;
                 }
             }
+        }
+        /// Operator == for class Product
+        public static bool operator ==(Product a, Product b)
+        {
+            if (a.article == b.article && a.name == b.name)
+                return true;
+            else
+                return false;
+        }
+        /// Operater != for class Product
+        public static bool operator !=(Product a, Product b)
+        {
+            if (a.article != b.article || a.name != b.name)
+                return true;
+            else
+                return false;
         }
     }
     // Shop with managers, users and products
@@ -597,6 +628,14 @@ namespace Unit7
         static void Main(string[] args)
         {
 
+            Manager a = new Manager(2000);
+            Console.WriteLine(a.Id);
+            Manager b = new Manager(2000);
+            Console.WriteLine(b.Id);
+            if (a == b)
+                Console.WriteLine("1");
+            else
+                Console.WriteLine("2");
             Console.ReadLine();
 
         }
