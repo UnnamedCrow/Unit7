@@ -27,7 +27,6 @@ namespace Unit7
         {
             get { return number++; }
         }
-
         /// Deleting one item, which equals NULL
         public static void CutOneItem(ref TArray[] OldArray, string Type)
         {
@@ -39,6 +38,12 @@ namespace Unit7
             Array.Resize(ref OldArray, OldArray.Length - 1);
             Console.WriteLine("Deleted one item {0}", Type);
         }
+        /// Add one item into array
+        public static void AddOneItem(ref TArray[] OldArray, TArray NewItem)
+        {
+            Array.Resize(ref OldArray, OldArray.Length + 1);
+            OldArray[OldArray.Length - 1] = NewItem;
+        }
         /// Counting sum of users products list
         public static double ListPrice(Product[] List)
         {
@@ -49,6 +54,7 @@ namespace Unit7
             }
             return Price;
         }
+        /// Check User for pay posibility
         public static bool CheckUsersBalance(User User)
         {
             if (User.productsList != null)
@@ -78,8 +84,10 @@ namespace Unit7
             id = 1000;
         }
     }
+    /// Class dicribes abstract entity Person
     abstract class Person
     {
+        /// Persons login
         private string login;
         public string Login
         {
@@ -92,6 +100,7 @@ namespace Unit7
                     Console.WriteLine("Ooops! Login can't be empty");
             }
         }
+        /// Persons password
         private string password;
         public string Password
         {
@@ -104,15 +113,18 @@ namespace Unit7
                     Console.WriteLine("Ooops! Password can't be empty");
             }
         }
-        public Person(string log, string pas)
+        public Person()
         {
-            password = pas;
-            login = log;
+            Console.WriteLine("Enter Login");
+            password = Console.ReadLine();
+            Console.WriteLine("Enter Password");
+            login = Console.ReadLine();
         }
     }
+    /// Class discribes entity User
     class User : Person
     {
-        // Users products list
+        /// Users products list
         public Product[] productsList;
         public Product this[int index]
         {
@@ -129,7 +141,7 @@ namespace Unit7
                     productsList[index] = value;
             }
         }
-        // users money balance
+        /// Users money balance
         private double balance;
         public double Balance
         {
@@ -142,12 +154,8 @@ namespace Unit7
                     Console.WriteLine("Ooops! You have not enough money to by");
             }
         }
-        private int delivery;
-        public int Delivery
-        {
-            get { return delivery; }
-        }
-        public User(double mon) : base(Console.ReadLine(), Console.ReadLine())
+        /// Constructor
+        public User(double mon) : base()
         {
             if (mon >= 0)
                 balance = mon;
@@ -155,8 +163,8 @@ namespace Unit7
                 Console.WriteLine("Ooops! User can't have negative balance");
             productsList = new Product[1];
             productsList[0] = null;
-            delivery =  0;
         }
+        /// Add one product in users product list
         public void AddProduct(Product NewProduct)
         {
             if (productsList != null)
@@ -176,6 +184,7 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
         }
+        /// Add array of products in users product list
         public void AddProduct(Product[] NewProducts)
         {
             if (productsList != null)
@@ -195,6 +204,7 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
         }
+        /// Delete one concrete product from users product list
         public void DeleteProduct(Product DelProd)
         {
             if (productsList != null)
@@ -215,18 +225,8 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
         }
-        public void ChooseDelivery()
-        {
-            Console.WriteLine("Choose the delivery you want");
-            Console.WriteLine("1 - HomeDelivery, 2 - PickPointDelivery, 3 - ShopDelivery");
-            delivery = int.Parse(Console.ReadLine());
-            if (delivery != 1 && delivery != 2 && delivery != 3)
-            {
-                Console.WriteLine("Ooops! Wrong choise!");
-                ChooseDelivery();
-            }
-        }
     }
+    /// Class dicribes entity Manager
     class Manager : Person
     {
         private int id;
@@ -242,7 +242,13 @@ namespace Unit7
 
             }
         }
-        public Manager(int id) : base(Console.ReadLine(), Console.ReadLine())
+        /// Constructor without params
+        public Manager() : base()
+        {
+            id = Helper<Manager>.Id;
+        }
+        /// Constructor with one param
+        public Manager(int id) : this()
         {
             if (id > 1000)
                 this.id = id;
