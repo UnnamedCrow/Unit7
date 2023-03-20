@@ -526,54 +526,6 @@ namespace Unit7
             else
                 Console.WriteLine("Ooops! Wrong Item Type!");
         }
-        public void DelItem(User[] OldArray, string Login)
-        {
-            if (OldArray != null)
-            {
-                for (int i = 0; i < OldArray.Length; i++)
-                {
-                    if (OldArray[i].Login == Login)
-                    {
-                        Helper<User>.CutOneItem(ref OldArray, "User");
-                        return;
-                    }
-                }
-            }
-            else
-                Console.WriteLine("This Array can't be empty");
-        }
-        public void DelItem(Manager[] OldArray, string Login)
-        {
-            if (OldArray != null)
-            {
-                for (int i = 0; i < OldArray.Length; i++)
-                {
-                    if (OldArray[i].Login == Login)
-                    {
-                        Helper<Manager>.CutOneItem(ref OldArray, "Manager");
-                        return;
-                    }
-                }
-            }
-            else
-                Console.WriteLine("This Array can't be empty");
-        }
-        public void DelItem(Product[] OldArray, string Article)
-        {
-            if (OldArray != null)
-            {
-                for (int i = 0; i < OldArray.Length; i++)
-                {
-                    if (OldArray[i].Article == Article)
-                    {
-                        Helper<Product>.CutOneItem(ref OldArray, "Product");
-                        return;
-                    }
-                }
-            }
-            else
-                Console.WriteLine("This Array can't be empty");
-        }
         public bool CheckUser()
         {
             return true;
@@ -620,8 +572,6 @@ namespace Unit7
         {
             Console.WriteLine(Delivery.Address);
         }
-
-        // ... Другие поля
     }
     internal class Program
     {
