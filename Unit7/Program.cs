@@ -9,11 +9,19 @@ namespace Unit7
 {
     static class Helper<TArray>
     {
+        /// Generate and store unique value for Managers ID
+        private static int id;
+        public static int Id
+        {
+            get { return id++; }
+        }
+        /// Generate and store unique value for Products Article
         private static int article;
         public static int Article
         {
             get { return article++; }
         }
+        /// Generate and store unique value for Orders number
         private static int number;
         public static int Number
         {
@@ -67,6 +75,7 @@ namespace Unit7
         {
             article = 0;
             number = 0;
+            id = 1000;
         }
     }
     abstract class Person
