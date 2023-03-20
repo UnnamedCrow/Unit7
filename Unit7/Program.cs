@@ -76,7 +76,7 @@ namespace Unit7
                 return false;
             }
         }
-
+        /// Static constructor
         static Helper()
         {
             article = 0;
@@ -288,27 +288,36 @@ namespace Unit7
             else return false;
         }
     }
-
+    /// Decribes abstract entity Delivery
     abstract public class Delivery
     {
-        public string Address;
-        public double Cost;
+        public string ShopAddress;
+        public virtual double Cost
+        {
+            get 
+            {
+                return ShopAddress.Length - DeliveryAddress.Length;
+            }
+        }
+        public string DeliveryAddress;
     }
-
+    /// Delivery from shop to the user home by courier
     class HomeDelivery : Delivery
     {
-        /* ... */
-    }
 
+        public override double Cost => base.Cost * 2.1;
+    }
+    /// Delivery from shop to the pickpoint
     class PickPointDelivery : Delivery
     {
-        /* ... */
+        public override double Cost => base.Cost* 2.1;
     }
-
+    /// Delivery from one shop to the another shop
     class ShopDelivery : Delivery
     {
-        /* ... */
+        public override double Cost => base.Cost * 0.2;
     }
+    /// Describes entity Product
     public class Product
     {
         private string name;
@@ -323,7 +332,7 @@ namespace Unit7
                     Console.WriteLine("Ooops! Name of product can't be empty");
             }
         }
-        // Article of product can't bee empty
+        /// Article of product can't bee empty
         private string article;
         public string Article
         {
@@ -336,7 +345,7 @@ namespace Unit7
                     Console.WriteLine("Ooops! Article can't bee empty");
             }
         }
-        // Prise of products can't bee cheper than 0.01
+        /// Prise of products can't bee cheper than 0.01
         private double price;
         public double Price
         {
@@ -350,7 +359,7 @@ namespace Unit7
             }
         }
         public string Description;
-        // Count of products in the shop
+        /// Count of products in the shop
         private int count;
         public int Count
         {
@@ -383,12 +392,12 @@ namespace Unit7
                 return false;
         }
     }
-    // Shop with managers, users and products
+    /// Shop with managers, users and products
     class Shop<TType>
     {
         public string Name;
         public string Adress;
-        // Managers array
+        /// Managers array
         private Manager[] managers;
         public Manager this[short index]
         {
@@ -415,7 +424,7 @@ namespace Unit7
                 return null;
             }
         }
-        // Array of users
+        /// Array of users
         private User[] users;
         public User this[byte index]
         {
@@ -432,7 +441,7 @@ namespace Unit7
                     users[index] = value;
             }
         }
-        // Array of products
+        /// Array of products
         private Product[] products;
         public Product this[int index]
         {
@@ -444,6 +453,7 @@ namespace Unit7
                     return null;
             }
         }
+        /// Base constructor
         public Shop()
         {
             Name = null;
@@ -452,6 +462,7 @@ namespace Unit7
             users = null;
             products = null;
         }
+        /// Second constructor
         public Shop(string Name, string Adress, User[] users, Product[] products) : this()
         {
             this.Name = Name;
@@ -567,27 +578,12 @@ namespace Unit7
             }
             Price += delivery.Cost;
         }
-
-        public void DisplayAddress()
-        {
-            Console.WriteLine(Delivery.Address);
-        }
     }
     internal class Program
     {
         static void Main(string[] args)
         {
-
-            Manager a = new Manager(2000);
-            Console.WriteLine(a.Id);
-            Manager b = new Manager(2000);
-            Console.WriteLine(b.Id);
-            if (a == b)
-                Console.WriteLine("1");
-            else
-                Console.WriteLine("2");
             Console.ReadLine();
-
         }
     }
 }
