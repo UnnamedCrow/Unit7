@@ -113,6 +113,23 @@ namespace Unit7
                     Console.WriteLine("Ooops! Password can't be empty");
             }
         }
+        /// Operator == for class Person
+        public static bool operator ==(Person a, Person b)
+        {
+            if (a.Login == b.Login)
+                return true;
+            else
+                return false;
+        }
+        /// Operator != for class Person
+        public static bool operator !=(Person a, Person b)
+        {
+            if (a.Login != b.Login)
+                return true;
+            else
+                return false;
+        }
+        /// Constructor
         public Person()
         {
             Console.WriteLine("Enter Login");
@@ -336,7 +353,7 @@ namespace Unit7
         }
     }
     // Shop with managers, users and products
-    class Shop
+    class Shop<TType>
     {
         public string Name;
         public string Adress;
@@ -399,7 +416,7 @@ namespace Unit7
         public Shop()
         {
             Name = null;
-            Adress= null;
+            Adress = null;
             managers = null;
             users = null;
             products = null;
@@ -413,6 +430,70 @@ namespace Unit7
             Manager[] managers = new Manager[i];
             this.users = users;
             this.products = products;
+        }
+        public void DelItem(TType Item)
+        {
+            /// Delete User from users list
+            if (Item is User User)
+            {
+                if (users != null)
+                {
+                    for (int i = 0; i < users.Length; i++)
+                    {
+                        if (users[i] == User)
+                        {
+                            users[i] = null;
+                            Helper<User>.CutOneItem(ref users, "User");
+                            return;
+                        }
+                    }
+                }
+                else
+                    Console.WriteLine("Ooops! Users list is empty!");
+            }
+            /// Delete Manager from managers list
+            if (Item is Manager Manager)
+            {
+                if (managers != null)
+                {
+                    for (int i = 0; i < managers.Length; i++)
+                    {
+                        if (managers[i] == Manager)
+                        {
+                            managers[i] = null;
+                            Helper<Manager>.CutOneItem(ref managers, "Manager");
+                            return;
+                        }
+                    }
+                }
+                else
+                    Console.WriteLine("Ooops! Manager list is empty!");
+            }
+            /// Delete Product from products list
+            if (Item is Product Product)
+            {
+                if (products != null)
+                {
+                    for (int i = 0; i < products.Length; i++)
+                    {
+                        if (products[i] == Product)
+                        {
+                            if (products[i].Count > Product.Count)
+                                products[i].Count -= Product.Count;
+                            else
+                            {
+                                products[i] = null;
+                                Helper<Product>.CutOneItem(ref products, "Product");
+                                return;
+                            }
+                        }
+                    }
+                }
+                else
+                    Console.WriteLine("Ooops! Users list is empty!");
+            }
+            else
+                Console.WriteLine("Ooops! Wrong Item Type!");
         }
         public void DelItem(User[] OldArray, string Login)
         {
@@ -460,7 +541,7 @@ namespace Unit7
                 }
             }
             else
-                Console.WriteLine("This Array can't be empty"); 
+                Console.WriteLine("This Array can't be empty");
         }
         public bool CheckUser()
         {
