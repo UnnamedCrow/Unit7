@@ -28,7 +28,7 @@ namespace Unit7
             get { return number++; }
         }
         /// Deleting one item, which equals NULL
-        public static void CutOneItem(ref TArray[] OldArray, string Type)
+        public static void CutOneItem<TArray>(ref TArray[] OldArray, string Type)
         {
             for (int i = 0; i < OldArray.Length - 1; i++)
             {
@@ -39,7 +39,7 @@ namespace Unit7
             Console.WriteLine("Deleted one item {0}", Type);
         }
         /// Add one item into array
-        public static void AddOneItem(ref TArray[] OldArray, TArray NewItem)
+        public static void AddOneItem<TArray>(ref TArray[] OldArray, TArray NewItem)
         {
             Array.Resize(ref OldArray, OldArray.Length + 1);
             OldArray[OldArray.Length - 1] = NewItem;
@@ -89,7 +89,7 @@ namespace Unit7
     {
         /// Persons login
         private string login;
-        public string Login
+        public virtual string Login
         {
             get { return login; }
             set
@@ -101,17 +101,11 @@ namespace Unit7
             }
         }
         /// Persons password
-        private string password;
-        public string Password
+        protected string password;
+        public abstract string Password
         {
-            get { return password; }
-            set
-            {
-                if (value != null)
-                    password = value;
-                else
-                    Console.WriteLine("Ooops! Password can't be empty");
-            }
+            get;
+            set;
         }
         /// Operator == for class Person
         public static bool operator ==(Person a, Person b)
@@ -141,6 +135,17 @@ namespace Unit7
     /// Class discribes entity User
     class User : Person
     {
+        public override string Password
+        {
+            get { return password; }
+            set
+            {
+                if (value != null)
+                    password = value;
+                else
+                    Console.WriteLine("Ooops! Password can't be empty");
+            }
+        }
         /// Users products list
         public Product[] productsList;
         public Product this[int index]
@@ -188,15 +193,14 @@ namespace Unit7
             {
                 foreach (Product Prod in productsList)
                 {
-                    if (Prod.Name == NewProduct.Name && Prod.Article == NewProduct.Article)
+                    if (Prod == NewProduct)
                     {
                         Prod.Count += NewProduct.Count;
                         break;
                     }
 
                 }
-                Array.Resize(ref productsList, productsList.Length + 1);
-                productsList[productsList.Length - 1] = NewProduct;
+                Helper<Product>.AddOneItem(ref productsList, NewProduct);
             }
             else
                 Console.WriteLine("Ooops! Product list equals NULL! Fix this misunderstanding!");
@@ -209,13 +213,12 @@ namespace Unit7
                 foreach (Product Prod in productsList)
                     foreach (Product NewProd in NewProducts)
                     {
-                        if (Prod.Name == NewProd.Name && Prod.Article == NewProd.Article)
+                        if (Prod == NewProd)
                         {
                             Prod.Count += NewProd.Count;
                             break;
                         }
-                        Array.Resize(ref productsList, productsList.Length + 1);
-                        productsList[productsList.Length - 1] = NewProd;
+                        Helper<Product>.AddOneItem(ref productsList, NewProd);
                     }
             }
             else
@@ -228,13 +231,13 @@ namespace Unit7
             {
                 for (int i = 0; i < productsList.Length; i++)
                 {
-                    if (productsList[i].Name == DelProd.Name && productsList[i].Article == DelProd.Article)
+                    if (productsList[i] == DelProd)
                     {
                         productsList[i].Count -= DelProd.Count;
                         if (productsList[i].Count == 0)
                         {
                             productsList[i] = null;
-                            Helper<Product>.CutOneItem(ref productsList, "User");
+                            Helper<Product>.CutOneItem<Product>(ref productsList, "Product");
                         }
                     }
                 }
@@ -246,6 +249,30 @@ namespace Unit7
     /// Class dicribes entity Manager
     class Manager : Person
     {
+        public override string Login
+        {
+            get => base.Login;
+
+            set
+            {
+                if (value.Contains("M_"))
+                    base.Login = value;
+                else
+                    Console.WriteLine("Ooops! Wrong login");
+            }
+        }
+        public override string Password
+        {
+            get { return password; }
+            set
+            {
+                if (value != null && value.Length > 10)
+                    password = value;
+                else
+                    Console.WriteLine("Ooops! Password can't be empty or shorter 10 letters");
+            }
+        }
+        
         private int id;
         public int Id
         {
@@ -255,7 +282,11 @@ namespace Unit7
                 if (value > 1000)
                     id = value;
                 else
-                    Console.WriteLine("Ooops! Manager ID mast be bigger than 1000");
+                {
+                    Console.WriteLine("Ooops! Manager ID mast be bigger than 1000. Id was generated automaticly.");
+                    id = Helper<Manager>.Id;
+                }
+
 
             }
         }
@@ -267,10 +298,7 @@ namespace Unit7
         /// Constructor with one param
         public Manager(int id) : this()
         {
-            if (id > 1000)
                 this.id = id;
-            else
-                Console.WriteLine("Ooops! Manager ID mast be bigger than 1000");
         }
         /// Operator == for class Manager
         public static bool operator ==(Manager a, Manager b)
@@ -473,7 +501,7 @@ namespace Unit7
             this.users = users;
             this.products = products;
         }
-        public void DelItem(TType Item)
+        public void DelItem<TTYpe>(TType Item)
         {
             /// Delete User from users list
             if (Item is User User)
